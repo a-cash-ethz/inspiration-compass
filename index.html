@@ -77,6 +77,7 @@ h2{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-.01em;margin-b
 .stage{background:var(--panel);border-radius:14px;padding:14px;position:relative;box-shadow:0 1px 2px rgba(36,34,31,.05)}
 .stage .bar{height:6px;border-radius:3px;margin-bottom:10px}
 .stage b{display:block;font-size:16px}.stage small{display:block;color:var(--muted);font-size:13px;margin-top:2px}.stage p{font-size:13.5px;margin-top:8px;color:var(--muted)}
+.stage{font:inherit;text-align:left;cursor:pointer;border:0;width:100%;display:block}.stage.sel{box-shadow:0 0 0 2px var(--ink)}.stage.here.sel{box-shadow:0 0 0 2px var(--red)}.stage .more{display:block;font-size:12.5px;font-weight:600;color:var(--red);margin-top:8px}.jdet{margin-top:10px}.jdet ul{margin:8px 0 0 18px;padding:0;font-size:15px}.jdet li{margin:5px 0}
 .stage.here{box-shadow:inset 0 0 0 2px var(--red)}
 .here-tag{position:absolute;top:-11px;left:12px;background:var(--red);color:#fff;font-size:12px;font-weight:700;border-radius:10px;padding:2px 9px}
 .check{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -151,7 +152,7 @@ const PEERS=[["Priya S.","Region A",4,1,"#9C947C"],["Jonas W.","Region A",6,0,"#
 const FLOW=role==="inspirer"?["why","lit","name","instinct","passion","ask","flame","journey"]:["why","best","done"];
 const CHAPS=[{t:"You have been chosen",sub:"",st:["why"]},{t:"Who inspired you",sub:"Every leader was inspired by someone.",st:["lit","name"]},{t:"The wisdom you carry",sub:"Three moments. Trust your first instinct.",st:["instinct"]},{t:"Your proudest moment",sub:"One story, in your own words.",st:["passion"]},{t:"Through others’ eyes",sub:"Others see what you can’t.",st:["ask"]},{t:"What you will pass on",sub:"Where it all comes together.",st:["flame"]},{t:"The year ahead",sub:"What happens next.",st:["journey"]}];
 const MINS={why:6,lit:5,name:4,instinct:4,passion:2,ask:1,flame:0,journey:0};
-const fresh=()=>({k:0,seen:0,iq:0,inst:{},lit:[],litText:"",passion:[],story:"",team:[],leader:"",invited:false,teamAns:null,mgr:null,revealed:false,real:"",opened:[0],tbest:[],anim:{}});
+const fresh=()=>({jsel:0,k:0,seen:0,iq:0,inst:{},lit:[],litText:"",passion:[],story:"",team:[],leader:"",invited:false,teamAns:null,mgr:null,revealed:false,real:"",opened:[0],tbest:[],anim:{}});
 let st=fresh();
 const $=id=>document.getElementById(id);
 const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -284,13 +285,15 @@ function screen(){const s0=stage();
   const sig=signature(),tp=topicFor(),topT=[...PR.keys()].sort((a,b)=>st.teamAns[b]-st.teamAns[a])[0],topM=st.mgr.find(n=>n!==topT)??st.mgr[0];
   return C+`<h2>You will pass on: ${PR[sig[0]].n} and ${PR[sig[1]].n}</h2><p class="lead">Where your story, your instinct and others’ view meet.</p>
   <div class="views"><div><b><i style="background:#C1272D"></i>Your story</b><span>“${esc(st.story)}”</span></div><div><b><i style="background:var(--ink)"></i>Your team</b><span>sees you at your best when you ${PR[topT].you}.</span></div><div><b><i style="background:#9C947C"></i>Your own leader</b><span>sees you at your best when you ${PR[topM].you}.</span></div></div>
-  <div class="card"><p class="meta">You are a natural voice for</p><p style="font-size:20px;font-weight:700">${TOPICS[tp]}</p></div>
+  <div class="card"><p class="meta">You are a natural voice for</p><p style="font-size:20px;font-weight:700">${TOPICS[tp]}</p><p class="meta" style="margin-top:4px">From month 6, you share it with others, with a kit to help.</p></div>
   <div class="card" style="margin-top:12px;text-align:center"><b>Your inspiration card</b><img id="cardimg" class="cardimg" alt="Your inspiration card"><a class="btn alt" id="carddl" download="my-inspiration-card.png">Save</a></div>
   <details class="why"><summary>Why the compass points here</summary><p class="meta" style="padding-bottom:10px">Your story, your instinct, and what your team and own leader chose, added up for each practice. The two highest are what you will pass on.</p></details>`
   +lock("Only you and your own leader see this. Nothing here feeds your rating.")+`<p class="meta" style="margin-top:6px">⚑ Prototype: example answers.</p>`+nav(true,true,"Your year ›");}
- if(s0==="journey"){const S4=[["Light it","Months 1–4",PC[0].f,1],["Fuel it","Month 5 · Master Class",PC[1].f,0],["Spread it","Months 6–12",PC[2].f,0],["Keep it burning","Months 11–12","#24221F",0]];
+ if(s0==="journey"){const JD=t=>[["Three digital sessions with your Regional Learning Head: the framework, situational leadership, courageous conversations.","Choose one real situation from your team to bring along."],["The Master Class: all three topics, worked on your own real case.","Meet inspirers from other regions.","Rehearse the session you will run."],["A short session on how to inspire others.",`Your kit for ${t.toLowerCase()}: a story, a 45-minute run sheet and a Copilot script.`,"Share it in Leadership Academy, lunch and learns, Waves and team meetings, as often as your region allows."],["A short pulse: your team tells you what changed.","You nominate a leader you think should take this journey next year."]];
+ const tpN=TOPICS[topicFor()];const S4=[["Light it","Months 1–4",PC[0].f,1,"Three digital sessions and a real case."],["Fuel it","Month 5",PC[1].f,0,"The Master Class, with inspirers from other regions."],["Spread it","Months 6–12",PC[2].f,0,`You share ${tpN.toLowerCase()}, with a ready-made kit.`],["Keep it burning","Months 11–12","#24221F",0,"You nominate a leader for next year’s journey."]];
   return C+`<h2>You are ready</h2><p class="lead">Your year, and where you are now.</p>
-  <div class="map">${S4.map(([a,b,col,here])=>`<div class="stage${here?" here":""}">${here?`<span class="here-tag">You are here</span>`:""}<div class="bar" style="background:${col}"></div><b>${a}</b><small>${b}</small></div>`).join("")}</div>
+  <div class="map" role="tablist" aria-label="Your year">${S4.map(([a,b,col,here,d],i)=>`<button class="stage${here?" here":""}${st.jsel===i?" sel":""}" data-js="${i}" role="tab" aria-selected="${st.jsel===i}" aria-controls="jdet">${here?`<span class="here-tag">You are here</span>`:""}<div class="bar" style="background:${col}"></div><b>${a}</b><small>${b}</small><p>${d}</p><span class="more">${st.jsel===i?"Showing below ▾":"Tap for more ›"}</span></button>`).join("")}</div>
+  <div class="card jdet" id="jdet" role="tabpanel" style="border-top:5px solid ${S4[st.jsel][2]}"><b>${S4[st.jsel][0]}</b><ul>${JD(tpN)[st.jsel].map(x=>`<li>${x}</li>`).join("")}</ul></div>
   <div class="card" style="margin-top:14px"><b>Next</b>
   <div class="check"><span class="box on">✓</span><span><b>The Compass</b></span></div>
   <div class="check"><span class="box"></span><span style="flex:1"><b>Three digital sessions</b><br><a class="btn alt" id="ics" download="inspiration-digital-sessions.ics" style="margin-top:8px">Add to calendar</a></span></div>
@@ -315,6 +318,7 @@ function render(){header();steps();drawDial();const v=$("view");v.innerHTML=scre
  v.querySelectorAll("[data-inst]").forEach(b=>b.onclick=()=>{buzz();st.inst[st.iq-1]=+b.dataset.inst;render()});
  v.querySelectorAll("[data-team]").forEach(b=>b.onclick=()=>{keep();buzz();const x=b.dataset.team,i=st.team.indexOf(x);if(i>=0)st.team.splice(i,1);else st.team.push(x);render()});
  v.querySelectorAll("[data-fw]").forEach(b=>b.onclick=openFW);
+ v.querySelectorAll("[data-js]").forEach(b=>b.onclick=()=>{keep();st.jsel=+b.dataset.js;buzz();render();const d=$("jdet");if(d)d.scrollIntoView({block:"nearest",behavior:RM?"auto":"smooth"})});
  v.querySelectorAll("[data-mic]").forEach(b=>b.onclick=()=>voice(b));
  const lt=$("litText");if(lt)lt.oninput=()=>setNext(lt.value.trim().length>0||st.lit.length>0);
  const sy=$("story");if(sy)sy.oninput=()=>setNext(sy.value.trim().length>0&&st.passion.length>0);
