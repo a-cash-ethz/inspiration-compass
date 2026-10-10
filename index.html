@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" style="color-scheme:light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inspiration Compass</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F4EF;--panel:#FFFFFF;--line:#E6E0D6;--ink:#24221F;--muted:#625B52;--tint:#EFEAE1;--red:#C1272D;--stone:#9C947C;--stoneT:#6F6853;--char:#4B4A4E;--amber:#D98A1C;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Archivo",Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5;min-height:100%}
+button,input,textarea{font:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.top{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.logo{display:block;height:23px;width:auto}
+.top h1{font-size:16px;font-weight:600}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+#hflame{display:inline-block;transition:transform .8s cubic-bezier(.34,1.56,.64,1);transform-origin:50% 90%}
+.col{max-width:700px;margin:0 auto;padding:20px 20px 64px}
+.steps{display:flex;gap:6px;list-style:none;padding:0;margin-bottom:14px}
+.steps li{flex:1;font-size:12.5px;color:var(--muted);border-top:3px solid var(--line);padding-top:6px}
+.steps li.done{color:var(--ink);border-top-color:var(--ink)}
+.steps li.now{color:var(--ink);font-weight:600;border-top-color:var(--red)}
+.steps li.click{cursor:pointer}
+.chapline{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--red);margin-bottom:10px}
+.chapline .left{color:var(--muted);letter-spacing:0;text-transform:none;font-weight:500}
+#dialwrap{display:flex;justify-content:center;margin:0 auto 6px;transition:max-width .5s}
+#dialwrap.big{max-width:500px}#dialwrap.mid{max-width:300px}
+#dial{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:0 auto 18px;max-width:520px;font-size:13.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend svg{flex:none}
+.ptr{transform-origin:0 0;transform-box:view-box;transition:transform 1s cubic-bezier(.34,1.56,.64,1),opacity .4s}
+.ptr polygon{stroke:var(--panel);stroke-width:2.5}
+.ptr.idle{animation:seek 6s ease-in-out infinite}
+@keyframes seek{0%{transform:rotate(-30deg)}50%{transform:rotate(30deg)}100%{transform:rotate(-30deg)}}
+h2{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-.01em;margin-bottom:10px}
+.lead{color:var(--muted);font-size:17px;margin-bottom:20px}
+.statement{font-size:30px;line-height:1.2;font-weight:700;color:var(--red);letter-spacing:-.01em;margin:6px 0 26px}
+.big{font-size:22px;line-height:1.3;font-weight:700;margin-bottom:6px}
+.card{background:var(--panel);border-radius:16px;padding:20px;box-shadow:0 1px 2px rgba(36,34,31,.05)}
+.scenario{font-size:17px;line-height:1.55;margin-bottom:14px}
+.q{font-weight:600;font-size:17px;margin-bottom:12px}
+.pick{width:100%;min-height:48px;text-align:left;background:var(--panel);border:1px solid transparent;border-radius:12px;padding:13px 16px;margin-bottom:8px;cursor:pointer;display:flex;gap:12px;align-items:center;font-size:16px;box-shadow:0 1px 2px rgba(36,34,31,.05)}
+.pick:hover{border-color:var(--line)}
+.pick .dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--muted)}
+.pick.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:var(--tint)}
+.pick.on::after{content:"✓";margin-left:auto;font-weight:700}
+.pick[disabled]{opacity:.4;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;border:1.5px solid var(--c,var(--line));background:var(--panel);color:var(--ink);border-radius:22px;padding:8px 15px;font-size:15px;cursor:pointer}
+.chip.on{background:var(--c,var(--ink));color:#fff;border-color:var(--c,var(--ink))}
+.chip[disabled]{opacity:.4;cursor:default}
+.chip.x::after{content:" ×";opacity:.7}
+.meta{font-size:14px;color:var(--muted)}
+.lock{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--muted);margin-top:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;background:var(--red);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn[disabled]{opacity:.4;cursor:default}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:24px}
+.txt{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:11px 13px;margin-top:8px;resize:vertical}
+.fieldhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mic{min-height:40px;border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap}
+.mic.on{background:var(--red);color:#fff;border-color:var(--red)}
+.video{display:flex;gap:14px;align-items:center;background:var(--ink);color:var(--panel);border-radius:16px;padding:18px 20px}
+.video .play{width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.video small{display:block;opacity:.75;font-size:13.5px}
+.ask{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}.ask span{flex:none;width:96px;font-weight:600;color:var(--red)}
+.reveal{background:var(--panel);border-radius:16px;padding:18px 20px;margin-top:12px;box-shadow:0 1px 2px rgba(36,34,31,.05)}
+.tag{display:inline-block;font-size:13px;font-weight:600;border-radius:12px;padding:3px 10px;margin:4px 6px 0 0;color:#fff}
+.banner{display:flex;gap:12px;align-items:flex-start;background:#FFF4D6;color:#3D3218;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:14.5px}
+.banner b{display:block}
+.views{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.views div{background:var(--panel);border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(36,34,31,.05)}
+.views b{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.views i{display:inline-block;width:14px;height:4px;border-radius:2px}
+.views span{font-size:15px;line-height:1.45}
+.map{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 8px}
+.stage{background:var(--panel);border-radius:14px;padding:14px;position:relative;box-shadow:0 1px 2px rgba(36,34,31,.05)}
+.stage .bar{height:6px;border-radius:3px;margin-bottom:10px}
+.stage b{display:block;font-size:16px}.stage small{display:block;color:var(--muted);font-size:13px;margin-top:2px}.stage p{font-size:13.5px;margin-top:8px;color:var(--muted)}
+.stage.here{box-shadow:inset 0 0 0 2px var(--red)}
+.here-tag{position:absolute;top:-11px;left:12px;background:var(--red);color:#fff;font-size:12px;font-weight:700;border-radius:10px;padding:2px 9px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+.check .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.check .box.on{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.peers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.peer{display:flex;gap:12px;align-items:center;background:var(--panel);border-radius:14px;padding:12px;box-shadow:0 1px 2px rgba(36,34,31,.05)}
+.av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;flex:none}
+.peer small{display:block;color:var(--muted);font-size:13px}
+details.why{margin:0 0 12px}details.why summary{cursor:pointer;font-weight:600;padding:8px 0}
+.overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px}
+#opener{background:#F7F3EC;color:#24221F;flex-direction:column;text-align:center;cursor:pointer;transition:opacity .5s}
+#opener .wc{position:absolute;inset:0;width:100%;height:100%}
+#opener .in{position:relative;max-width:560px}
+#opener small{display:block;font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--red);margin-bottom:12px}
+#opener h3{font-size:44px;line-height:1.1;margin-bottom:12px}
+#opener p{font-size:19px;color:#5A534A}
+#opener .tap{position:absolute;bottom:28px;left:0;right:0;font-size:13px;color:#8A8278}
+.modal{background:rgba(20,18,16,.55);align-items:flex-start;overflow:auto}
+.mbox{background:var(--bg);border-radius:18px;max-width:980px;width:100%;padding:22px;margin-top:calc(env(safe-area-inset-top,0px) + 8px)}
+.fwgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.fwhead{background:var(--panel);border-radius:12px;padding:12px 14px;margin-bottom:8px}.fwhead b{display:block;font-size:17px}
+.fwpr{background:var(--panel);border-radius:12px;padding:2px 14px;margin:0 0 8px}
+.fwpr summary{padding:11px 0;font-weight:600;cursor:pointer}.fwpr ul{margin:0 0 10px 18px;padding:0;font-size:14.5px;color:var(--muted)}.fwpr li{margin:4px 0}
+.suspense{text-align:center;padding:30px 10px}
+.suspense .dots{display:flex;gap:10px;justify-content:center;margin:18px 0 22px}
+.suspense .dots span{width:16px;height:16px;border-radius:50%;background:var(--ink);opacity:0;animation:pop .4s forwards}
+.suspense .dots span.l{background:var(--stone)}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+.cardimg{width:100%;max-width:360px;border-radius:14px;box-shadow:0 6px 24px rgba(36,34,31,.18);display:block;margin:10px auto}
+.ok{margin-top:8px;font-size:14.5px;min-height:20px}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+@media (max-width:640px){.statement{font-size:25px}.big{font-size:20px}.map{grid-template-columns:1fr 1fr}.views{grid-template-columns:1fr}.steps li{font-size:0;padding-top:0}.fwgrid{grid-template-columns:1fr}.peers{grid-template-columns:1fr}#opener h3{font-size:34px}h2{font-size:25px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<header class="top"><img class="logo" src="data:image/png;base64,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" alt="Hilti" width="96" height="23"><h1>Inspiration Compass</h1><span class="right"><span id="hflame" aria-hidden="true"><svg viewBox="0 0 100 140" width="18" height="25"><path d="M50,4 C64,30 92,52 90,90 C88,118 70,136 50,136 C30,136 12,118 10,90 C8,62 30,46 38,22 C44,40 46,48 54,56 C56,38 52,20 50,4 Z" fill="#C1272D"/><path d="M50,62 C58,78 72,88 70,106 C68,122 60,128 50,128 C40,128 32,122 30,106 C28,90 44,82 50,62 Z" fill="#F3D6D3"/></svg></span><span id="who"></span></span></header>
+<main class="col">
+<ol class="steps" id="steps" aria-label="Chapters"></ol>
+<div id="dialwrap" class="mid"><svg id="dial" viewBox="-420 -420 840 840" role="img" aria-label="The Hilti Leadership Framework as a compass"><g id="stat"></g><g id="ptrs"><g class="ptr" id="p0"><polygon points="0,-236 10,-64 -10,-64"/></g></g><g id="hub"></g></svg></div>
+<div id="legend" class="legend" aria-hidden="true"></div>
+<div id="view" aria-live="polite"></div>
+</main>
+<script>
+const PC=[{f:"#C1272D",t:"#C1272D",n:"Lead with Heart"},{f:"#9C947C",t:"#6F6853",n:"Drive What Matters"},{f:"#4B4A4E",t:"#6E6C70",n:"Shape the Future"}];
+const PR=[
+{i:0,j:0,n:"Lead authentically",me:"Being myself, and owning my mistakes in front of the team",lit:"Was genuinely themselves, mistakes included",team:"Is genuinely themselves, and owns mistakes openly",you:"are genuinely yourself, and own mistakes openly",topic:1},
+{i:0,j:1,n:"Grow trusting relationships",me:"Building trust, so people bring me the real story",lit:"Made me feel I could tell them anything",team:"Builds trust, so we bring them the real story",you:"build trust, so people bring you the real story",topic:2},
+{i:0,j:2,n:"Have courageous conversations",me:"Saying the hard thing early, with care",lit:"Told me the truth early, even when it was hard",team:"Says the hard thing early, and with care",you:"say the hard thing early, and with care",topic:2},
+{i:1,j:0,n:"Plan and prioritize",me:"Cutting through the noise to what matters most",lit:"Knew what mattered, and protected it",team:"Cuts through the noise to what matters",you:"cut through the noise to what matters",topic:0},
+{i:1,j:1,n:"Coach for performance",me:"Helping someone find their own answer",lit:"Asked me questions instead of giving answers",team:"Helps us find our own answers",you:"help people find their own answers",topic:1},
+{i:1,j:2,n:"Set and reinforce clear expectations",me:"Making it crystal clear what good looks like",lit:"Was always clear about what good looked like",team:"Makes it clear what good looks like",you:"make it clear what good looks like",topic:1},
+{i:2,j:0,n:"Turn vision into action",me:"Explaining the why, so people want to follow",lit:"Made me believe in where we were going",team:"Explains the why, so we want to follow",you:"explain the why, so people want to follow",topic:0},
+{i:2,j:1,n:"Adapt to change",me:"Adjusting how I lead to each person and moment",lit:"Led me differently from others, because I needed it",team:"Leads each of us the way we need",you:"lead each person the way they need",topic:1},
+{i:2,j:2,n:"Develop for tomorrow",me:"Giving people a stretch, and backing them",lit:"Trusted me with something bigger than I thought I could do",team:"Gives us a stretch, and backs us",you:"give people a stretch, and back them",topic:1}];
+const SC=[
+{n:2,sc:"For the third time this month, Sam has missed a deadline that others in the team depend on. Sam’s work is otherwise excellent, and colleagues have quietly started working around it.",opts:[["Wait for the year-end review, where you can discuss it properly.","m"],["Talk to Sam privately this week: say what you have noticed, and ask what is going on.","b"],["Quietly move the most urgent work to someone more reliable for now.","p"]]},
+{n:5,sc:"After a team meeting, you asked three people to “improve how we work with our customers.” Two weeks later each has done something different, and not much has changed.",opts:[["Ask the person who made the most progress to share what they did at the next meeting.","p"],["Give it a few more weeks. Changes like this take time to show.","m"],["Agree with each of them what good looks like for the next two weeks, and when you will check in.","b"]]},
+{n:7,sc:"Two people in your team start using a new system on the same day: Ana, with twelve years’ experience but new to the system, and Kai, six months in and confident with technology.",opts:[["Give both the same training and the same deadline, so neither feels singled out.","m"],["Spend more time with Ana at first, give Kai more room, and check in with each.","b"],["Pair Ana with Kai, so they learn from each other.","p"]]}];
+const FW=[["Lead with Heart","Building trust and genuinely caring for your people, so they can thrive.",[["Lead authentically",["Live and communicate your leadership values","Model Hilti’s Care and Perform behaviors","Show humility and self-awareness"]],["Grow trusting relationships",["Listen deeply and act on feedback","Hold frequent conversations","Recognize strengths and celebrate contributions"]],["Have courageous conversations",["Address issues openly and early","Balance clarity with empathy","Follow up to support growth and accountability"]]]],
+["Drive What Matters","Bringing clarity, setting priorities and executing with discipline.",[["Plan and prioritize",["Set clear priorities aligned with strategy","Protect time for most important work","Review and reset plan and priorities with the team"]],["Coach for performance",["Coach to build capabilities","Ask questions before giving answers","Recognize progress and celebrate learning"]],["Set and reinforce clear expectations",["Define roles, goals and success measures clearly","Support and check for follow-through on commitments","Reflect: look in the mirror first"]]]],
+["Shape the Future","Developing people, adapting, and building tomorrow while delivering today.",[["Turn vision into action",["Connect team goals to Hilti’s strategy","Translate vision into actionable priorities","Communicate a clear and inspiring “why”"]],["Adapt to change",["Assess context and team readiness before deciding","Flex your leadership style to the moment","Role-model resilience and focus"]],["Develop for tomorrow",["Hire for potential and cultural fit","Provide stretch opportunities for growth","Nurture strengths and develop people for the right roles"]]]]];
+const TOPICS=["The Hilti Leadership Framework","Situational Leadership","Courageous conversations"];// ---------- setup ----------
+const LOGO=new Image();LOGO.src="data:image/png;base64,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";
+const RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const Q=new URLSearchParams(location.search);
+const NAME=(Q.get("name")||"Alex").replace(/[<>&"]/g,"");
+const role=location.hash==="#team"?"team":location.hash==="#leader"?"leader":location.hash==="#stats"?"stats":"inspirer";
+const DEMO_TEAM=[1,4,5,0,3,1,2,1,3],DEMO_MGR=[2,4,8];
+const SUGGEST=["Lena","Marco","Sam","Priya","Tom","Ana","Kai"];
+const PEERS=[["Priya S.","Region A",4,1,"#9C947C"],["Jonas W.","Region A",6,0,"#4B4A4E"],["Mei L.","Region B",2,2,"#C1272D"],["Diego R.","Region B",7,1,"#4B4A4E"]];
+const FLOW=role==="inspirer"?["why","lit","name","instinct","passion","ask","flame","journey"]:["why","best","done"];
+const CHAPS=[{t:"Why you",sub:"You have been chosen.",st:["why"]},{t:"Where it comes from",sub:"Every leader was inspired by someone.",st:["lit","name"]},{t:"What you know",sub:"Three moments. Your first instinct.",st:["instinct"]},{t:"What you are proud of",sub:"One story, in your own words.",st:["passion"]},{t:"What others see",sub:"Others see what you can’t.",st:["ask"]},{t:"Your flame",sub:"Where it all comes together.",st:["flame"]},{t:"Where it goes",sub:"The year ahead.",st:["journey"]}];
+const MINS={why:6,lit:5,name:4,instinct:4,passion:2,ask:1,flame:0,journey:0};
+const fresh=()=>({k:0,seen:0,iq:0,inst:{},lit:[],litText:"",passion:[],story:"",team:[],leader:"",invited:false,teamAns:null,mgr:null,revealed:false,real:"",opened:[0],tbest:[],anim:{}});
+let st=fresh();
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const stage=()=>FLOW[st.k];
+const chapOf=s=>CHAPS.findIndex(c=>c.st.includes(s));
+const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}};
+// ---------- persistence (per viewer, this browser only) ----------
+const KEY="ic-v10-"+role;
+function save(){if(role!=="inspirer")return;try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function load(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):null}catch(e){return null}}
+// ---------- quiet analytics (prototype: stored in this browser) ----------
+let lastT=Date.now(),lastS=null;
+function track(s){try{const now=Date.now();if(lastS){const log=JSON.parse(localStorage.getItem("ic-log")||"[]");log.push({role,stage:lastS,sec:Math.round((now-lastT)/1000)});localStorage.setItem("ic-log",JSON.stringify(log.slice(-400)))}lastS=s;lastT=now}catch(e){}}
+// ---------- scoring ----------
+function instinctOk(n){const c=SC.findIndex(x=>x.n===n);return c>=0&&st.inst[c]!==undefined&&SC[c].opts[st.inst[c]][1]==="b"}
+function score(n){return(instinctOk(n)?2:0)+(st.passion.includes(n)?3:0)+(st.teamAns?st.teamAns[n]:0)+(st.mgr&&st.mgr.includes(n)?2:0)}
+function signature(){return[...PR.keys()].sort((a,b)=>score(b)-score(a)).slice(0,2)}
+function topicFor(){for(const n of signature()){if(PR[n].topic>0)return PR[n].topic}const t=[0,0,0];PR.forEach((p,n)=>t[p.topic]+=score(n));return t[1]>=t[2]?1:2}
+// ---------- drawing helpers ----------
+const ang=(i,j)=>i*120-40+j*40;
+function pt(r,a){const t=(a-90)*Math.PI/180;return[r*Math.cos(t),r*Math.sin(t)]}
+function arc(r1,r2,a1,a2){const[x1,y1]=pt(r2,a1),[x2,y2]=pt(r2,a2),[x3,y3]=pt(r1,a2),[x4,y4]=pt(r1,a1);return`M${x1},${y1}A${r2},${r2} 0 0 1 ${x2},${y2}L${x3},${y3}A${r1},${r1} 0 0 0 ${x4},${y4}Z`}
+function wrap(t,m){const w=t.split(" "),o=[];let l="";for(const x of w){if((l+" "+x).trim().length>m){o.push(l.trim());l=x}else l+=" "+x}o.push(l.trim());return o}
+const T=(x,y,t,o)=>`<text x="${x}" y="${y}" text-anchor="${o.a||"middle"}" font-size="${o.fs||15}" font-weight="${o.fw||600}" fill="${o.c||"var(--ink)"}" font-family="Archivo,Arial,sans-serif">${t}</text>`;
+const FP="M50,4 C64,30 92,52 90,90 C88,118 70,136 50,136 C30,136 12,118 10,90 C8,62 30,46 38,22 C44,40 46,48 54,56 C56,38 52,20 50,4 Z",FI="M50,62 C58,78 72,88 70,106 C68,122 60,128 50,128 C40,128 32,122 30,106 C28,90 44,82 50,62 Z";
+const FLAME=(w,c="#C1272D",inner="#F3D6D3")=>`<svg aria-hidden="true" viewBox="0 0 100 140" style="width:${w}px;height:${w*1.4}px;flex:none"><path d="${FP}" fill="${c}"/><path d="${FI}" fill="${inner}"/></svg>`;
+// ---------- the compass that fills as you go ----------
+function compassState(){const s0=stage(),k=st.k,idx=x=>FLOW.indexOf(x);
+ const show=["name","instinct","passion","ask","flame"].includes(s0);
+ const mem=k>=idx("name")?st.lit:[];
+ const sparks=SC.map((c,q)=>(st.inst[q]!==undefined&&(k>idx("instinct")||(s0==="instinct"&&st.iq>q+1)||(s0==="instinct"&&st.iq===q+1&&false)))?c.n:null).filter(x=>x!==null);
+ const story=k>=idx("passion")?st.passion:[];
+ const glow=(s0==="flame"&&st.revealed)?signature():[];
+ return{show,mem,sparks,story,glow,big:s0==="name"||s0==="flame"}}
+function drawDial(){const C=compassState(),s0=stage();
+ $("dialwrap").style.display=C.show?"flex":"none";if(!C.show){$("legend").style.display="none";return}$("dialwrap").className=C.big?"big":"mid";
+ const marked=new Set([...C.mem,...C.sparks,...C.story,...C.glow]);
+ let s=`<defs><filter id="gl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>`;
+ PC.forEach((c,i)=>{const mid=i*120,flip=mid>90&&mid<270,r=226,[sx,sy]=pt(r,flip?mid+50:mid-50),[ex,ey]=pt(r,flip?mid-50:mid+50);s+=`<path id="pn${i}" d="M${sx},${sy}A${r},${r} 0 0 ${flip?0:1} ${ex},${ey}" fill="none"/>`});
+ s+=`</defs><circle r="300" fill="var(--panel)" stroke="var(--line)" stroke-width="2"/>`;
+ PC.forEach((c,i)=>{const mid=i*120,n=[...marked].filter(m=>PR[m].i===i).length;
+  s+=`<path d="${arc(64,246,mid-59,mid+59)}" fill="${c.f}" opacity="${Math.min(.05+n*.05,.22)}" style="transition:opacity .6s"/><path d="${arc(274,292,mid-58,mid+58)}" fill="${c.f}"/>`;
+  s+=`<text font-size="17" font-weight="700" letter-spacing="2.5" fill="${c.t}" font-family="Archivo,Arial,sans-serif"><textPath href="#pn${i}" startOffset="50%" text-anchor="middle">${c.n}</textPath></text>`;
+  const[x1,y1]=pt(64,mid-60),[x2,y2]=pt(246,mid-60);s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--line)" stroke-width="1.5"/>`});
+ C.glow.forEach(n=>{const[gx,gy]=pt(283,ang(PR[n].i,PR[n].j));s+=`<circle cx="${gx}" cy="${gy}" r="34" fill="${PC[PR[n].i].f}" opacity=".55" filter="url(#gl)"/>`});
+ PR.forEach((x,n)=>{const a=ang(x.i,x.j),c=PC[x.i].f,[cx,cy]=pt(283,a),on=C.story.includes(n)||C.glow.includes(n);
+  s+=`<circle cx="${cx}" cy="${cy}" r="${on?16:10}" fill="${on?c:"var(--panel)"}" stroke="${c}" stroke-width="3" style="transition:r .4s"/>`;
+  const L=wrap(x.n,16),H=17,[lx,ly]=pt(318,a),side=Math.abs(lx)<60?"mid":(lx>0?"r":"l"),anc=side==="mid"?"middle":(side==="r"?"start":"end");let y0=side==="mid"?(ly<0?ly-8-(L.length-1)*H:ly+20):ly-(L.length-1)*H/2+5;if(side!=="mid"&&ly>150)y0+=10;
+  L.forEach((l,k)=>s+=T(lx,y0+k*H,l,{a:anc,fs:15,fw:marked.has(n)?700:500,c:marked.has(n)?"var(--ink)":"var(--muted)"}))});
+ // memories: small flames, flying in the first time
+ const fly=s0==="name"&&!st.anim.name&&!RM;
+ C.mem.forEach((n,k)=>{const a=ang(PR[n].i,PR[n].j)+13,[fx,fy]=pt(168,a),c=PC[PR[n].i].f;
+  s+=`<g transform="translate(${fx-20},${fy-28})">${fly?`<animateTransform attributeName="transform" type="translate" from="-20 -28" to="${fx-20} ${fy-28}" dur="0.9s" begin="${0.3+k*0.35}s" fill="freeze" calcMode="spline" keySplines="0.2 0.8 0.3 1"/>`:""}<svg viewBox="0 0 100 140" width="40" height="56"><path d="${FP}" fill="${c}"/><path d="${FI}" fill="#fff" fill-opacity=".7"/></svg></g>`});
+ // instinct: a quiet spark where an instinct was captured
+ C.sparks.forEach(n=>{const[sx,sy]=pt(150,ang(PR[n].i,PR[n].j));s+=`<g transform="translate(${sx},${sy})"><circle r="9" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.5"/><circle r="3.5" fill="var(--ink)"/></g>`});
+ $("stat").innerHTML=s;
+ $("hub").innerHTML=`<circle r="58" fill="var(--panel)" stroke="var(--line)" stroke-width="2"/><circle cx="0" cy="-24" r="14" fill="#C1272D" fill-opacity=".85"/><circle cx="10" cy="-8" r="14" fill="#9C947C" fill-opacity=".85"/><circle cx="-10" cy="-8" r="14" fill="#4B4A4E" fill-opacity=".85"/>`+T(0,25,"Hilti",{fs:12,fw:700,c:"#C1272D"})+T(0,40,"Leadership",{fs:11.5,c:"var(--muted)"});
+ if(fly)st.anim.name=true;
+ let target=null,col="var(--ink)";
+ if(C.glow.length){target=C.glow[0];col="#C1272D"}else if(s0==="passion"||s0==="ask"){target=C.story[C.story.length-1]??C.mem[C.mem.length-1]}else if(s0==="instinct"){target=C.sparks[C.sparks.length-1]??C.mem[C.mem.length-1]}else if(s0==="name"){target=C.mem[C.mem.length-1]}
+ const p=$("p0"),pol=p.querySelector("polygon");
+ if(target!==null&&target!==undefined&&!(s0==="flame"&&!st.revealed)){p.classList.remove("idle");pol.setAttribute("fill",col);p.style.transform=`rotate(${ang(PR[target].i,PR[target].j)}deg)`}else{pol.setAttribute("fill","var(--muted)");p.style.transform="";p.classList.add("idle")}
+ const LI={mem:`<svg viewBox="0 0 100 140" width="12" height="17"><path d="${FP}" fill="#C1272D"/><path d="${FI}" fill="#fff" fill-opacity=".7"/></svg>`,
+  spark:`<svg viewBox="-12 -12 24 24" width="16" height="16"><circle r="9" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.5"/><circle r="3.5" fill="var(--ink)"/></svg>`,
+  story:`<svg viewBox="-12 -12 24 24" width="16" height="16"><circle r="9" fill="#C1272D"/></svg>`,
+  glow:`<svg viewBox="-14 -14 28 28" width="18" height="18"><circle r="12" fill="#C1272D" opacity=".35"/><circle r="7" fill="#C1272D"/></svg>`};
+ const items=[];if(C.mem.length)items.push([LI.mem,"A leader who inspired you"]);if(C.sparks.length)items.push([LI.spark,"Your first instinct"]);if(C.story.length)items.push([LI.story,"Your story"]);if(C.glow.length)items.push([LI.glow,"Your flame"]);
+ $("legend").innerHTML=items.map(([i,t])=>`<span>${i}${t}</span>`).join("");$("legend").style.display=items.length?"flex":"none";
+ const names=[...marked].map(n=>PR[n].n);$("dial").setAttribute("aria-label",names.length?"Your compass so far: "+names.join(", "):"The Hilti Leadership Framework as a compass");}
+// ---------- chrome: header flame, steps, chapter line ----------
+function header(){const ch=chapOf(stage());const sc=role==="inspirer"?(.45+.55*(ch/(CHAPS.length-1))):1;
+ $("hflame").style.transform=`scale(${sc.toFixed(2)})`;
+ $("who").textContent=role==="inspirer"?"Inspirer":role==="team"?`About ${NAME}`:role==="leader"?`About ${NAME}, as their leader`:"Pilot analytics";}
+function steps(){if(role!=="inspirer"){const m=FLOW.indexOf(stage());$("steps").innerHTML=FLOW.map((f,n)=>`<li class="${n<m?"done":n===m?"now":""}"></li>`).join("");return}
+ const cur=chapOf(stage()),seenCh=chapOf(FLOW[st.seen]);
+ $("steps").innerHTML=CHAPS.map((c,n)=>`<li class="${n<cur?"done":n===cur?"now":""}${n<=seenCh&&n!==cur?" click":""}" ${n<=seenCh&&n!==cur?`data-step="${FLOW.indexOf(c.st[0])}" role="button" tabindex="0" aria-label="Go to ${c.t}"`:""}>${c.t}</li>`).join("");}
+function chapline(){const ch=chapOf(stage());let m=MINS[stage()];if(stage()==="instinct")m=Math.max(2,4-st.iq*0.6);m=Math.round(m);
+ return`<div class="chapline"><span>Chapter ${ch+1} of 7 · ${CHAPS[ch].t}</span>${m>0?`<span class="left">About ${m} min left</span>`:""}</div>`}
+// ---------- chapter openers ----------
+const WC=[["#C1272D","#E8A33D"],["#C1272D","#9C947C"],["#9C947C","#E8A33D"],["#C1272D","#E8A33D"],["#4B4A4E","#9C947C"],["#C1272D","#E8A33D"],["#4B4A4E","#C1272D"]];
+function watercolour(ch){const[a,b]=WC[ch];return`<svg class="wc" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+<filter id="wcf" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="${ch*7+3}"/><feDisplacementMap in="SourceGraphic" scale="60"/><feGaussianBlur stdDeviation="6"/></filter>
+<filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0.06 0"/></filter></defs>
+<g filter="url(#wcf)"><circle cx="${140+ch*40}" cy="470" r="190" fill="${a}" opacity=".16"/><circle cx="${640-ch*25}" cy="120" r="170" fill="${b}" opacity=".18"/><circle cx="${520}" cy="520" r="110" fill="${b}" opacity=".12"/></g><rect width="800" height="600" filter="url(#paper)"/></svg>`}
+function opener(ch,then){if(RM){then();return}const o=document.createElement("div");o.id="opener";o.className="overlay";o.setAttribute("role","dialog");o.setAttribute("aria-label",`Chapter ${ch+1}: ${CHAPS[ch].t}`);
+ o.innerHTML=watercolour(ch)+`<div class="in">${ch===5?FLAME(46):""}<small>Chapter ${ch+1} of 7</small><h3>${CHAPS[ch].t}</h3><p>${CHAPS[ch].sub}</p></div><div class="tap">Tap to continue</div>`;
+ document.body.appendChild(o);let done=false;const go=()=>{if(done)return;done=true;o.style.opacity=0;setTimeout(()=>{o.remove();then()},RM?0:450)};o.onclick=go;o.onkeydown=go;o.tabIndex=0;o.focus();setTimeout(go,1900)}
+// ---------- the whole framework ----------
+function openFW(){const m=document.createElement("div");m.className="overlay modal";m.setAttribute("role","dialog");m.setAttribute("aria-modal","true");m.setAttribute("aria-label","The Hilti Leadership Framework");
+ m.innerHTML=`<div class="mbox"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div><h2 style="margin-bottom:4px">The Hilti Leadership Framework</h2><p class="meta">A high care and high-performance oriented culture. Tap a practice to see its behaviours.</p></div><button class="btn alt" id="mx">Close</button></div>
+ <div class="fwgrid">${FW.map((p,i)=>`<div><div class="fwhead" style="border-top:6px solid ${PC[i].f}"><b style="color:${PC[i].t}">${p[0]}</b><span class="meta">${p[1]}</span></div>${p[2].map(([pr,bs])=>`<details class="fwpr"><summary>${pr}</summary><ul>${bs.map(b=>`<li>${b}</li>`).join("")}</ul></details>`).join("")}</div>`).join("")}</div>
+ <p class="meta" style="margin-top:12px">Behaviours shown for leaders of teams. Principles and practices are the same at every level; some behaviours vary by level.</p></div>`;
+ document.body.appendChild(m);const close=()=>{m.remove();document.removeEventListener("keydown",k)};const k=e=>{if(e.key==="Escape")close()};$("mx").onclick=close;m.onclick=e=>{if(e.target===m)close()};document.addEventListener("keydown",k);$("mx").focus()}
+const fwLink=()=>`<button class="btn alt" data-fw="1" style="margin-top:14px">See the whole framework</button>`;
+const lock=t=>`<p class="lock"><span aria-hidden="true">🔒</span><span>${t}</span></p>`;
+const nav=(back,next,label,ok=true)=>`<div class="nav">${back?`<button class="btn alt" data-nav="-1">‹ Back</button>`:"<span></span>"}${next?`<button class="btn" data-nav="1" ${ok?"":"disabled"}>${label||"Next ›"}</button>`:""}</div>`;
+const micBtn=id=>`<button type="button" class="mic" data-mic="${id}" aria-label="Speak instead of typing">🎙 Speak</button>`;
+// ---------- screens ----------
+function picks(list,key,max,field){return list.map((p,n)=>{const on=st[key].includes(n),full=!on&&st[key].length>=max;return`<button class="pick${on?" on":""}" data-pick="${n}" data-key="${key}" data-max="${max}" ${full?"disabled":""}><span class="dot"></span><span>${p[field]}</span></button>`}).join("")}
+function screen(){const s0=stage();
+ if(role==="stats"){let log=[];try{log=JSON.parse(localStorage.getItem("ic-log")||"[]")}catch(e){}const agg={};log.forEach(r=>{const k=r.role+" · "+r.stage;(agg[k]=agg[k]||[]).push(r.sec)});
+  return`<h2>Pilot analytics (prototype)</h2><p class="lead">Time per step, in this browser.</p><div class="card">${Object.keys(agg).length?Object.entries(agg).map(([k,v])=>`<div class="ask"><span style="width:200px;color:var(--ink)">${k}</span><p>${v.length}× · median ${v.sort((a,b)=>a-b)[Math.floor(v.length/2)]} s</p></div>`).join(""):`<p class="meta">No visits recorded yet.</p>`}</div>`}
+ if(role!=="inspirer"){
+  if(s0==="why")return`<div style="display:flex;gap:14px;align-items:center;margin-bottom:8px">${FLAME(40)}<h2 style="margin:0">Where is ${NAME} at their best?</h2></div><p class="lead">${NAME} has been chosen to inspire other leaders. Two minutes.</p>`+lock(role==="team"?"Anonymous. Shown only once three people have replied.":"Nothing here feeds anyone’s rating.")+nav(false,true,"Start ›");
+  if(s0==="best")return`<h2>Pick up to three</h2><p class="lead">Moments where you have seen ${NAME} at their best.</p>`+picks(PR,"tbest",3,"team")+nav(true,true,"Send ›",st.tbest.length>0);
+  return`<div style="display:flex;gap:14px;align-items:center">${FLAME(40)}<h2 style="margin:0">Thank you</h2></div><p class="lead" style="margin-top:10px">Later this year, you will see what ${NAME} passes on.</p>`}
+ const C=chapline();
+ if(s0==="why")return C+`<div style="display:flex;gap:18px;align-items:center;margin-bottom:14px">${FLAME(58)}<h2 style="margin:0">Welcome to the first step in lighting the flame of inspiration</h2></div>
+  <p class="big">${NAME}, you have been chosen to inspire others.</p><p class="lead">Your HR Head put your name forward in the People Review.</p>
+  <div class="video"><span class="play">▶</span><div><b>A message from your Regional Head of HR</b><small>About 2 minutes · to be recorded</small></div></div>
+  <div class="card" style="margin-top:14px"><b>Your year</b>
+  <div class="ask"><span>Now</span><p>6 minutes, here</p></div><div class="ask"><span>Months 2–4</span><p>Three digital sessions</p></div><div class="ask"><span>Month 5</span><p>The Master Class</p></div><div class="ask" style="border:0"><span>Months 6–12</span><p>Share what you know</p></div></div>
+  <p class="meta" style="margin-top:10px">Pause any time; you can pick up where you left off.</p>`+nav(false,true,"Begin ›");
+ if(s0==="lit")return C+`<p class="statement">Inspiration isn’t taught.<br>It is passed on, leader to leader.</p><h2>Which leader inspired you?</h2><p class="lead">What did they do? Pick up to three.</p>`+picks(PR,"lit",3,"lit")+
+  `<div class="card" style="margin-top:6px"><div class="fieldhead"><label for="litText" style="font-weight:600">Or in your own words</label>${micBtn("litText")}</div><textarea class="txt" id="litText" rows="2" placeholder="e.g. she stood up for me in a meeting I wasn’t in">${esc(st.litText)}</textarea></div>`+nav(true,true,"Next ›",st.lit.length>0||st.litText.length>0);
+ if(s0==="name"){const ps=st.lit.map(n=>PR[n]);return C+`<h2>What you remember has a name</h2><p class="lead">It is our Hilti Leadership Framework. You already know it.</p>
+  <div class="reveal">${ps.map(p=>`<p style="margin:6px 0"><span class="tag" style="background:${PC[p.i].f}">${PC[p.i].n}</span> <b>${p.n}</b></p>`).join("")}${st.litText?`<p style="margin:${ps.length?"10px":"6px"} 0 6px"><i>“${esc(st.litText)}”</i></p>`:""}</div>`+fwLink()+nav(true,true);}
+ if(s0==="instinct"){if(st.iq===0)return C+`<h2>You know more than you can put into words</h2><p class="lead">Three real dilemmas. Follow your first instinct; there is no right answer.</p>`+nav(true,true,"Start ›");
+  const c=SC[st.iq-1];return C+`<p class="meta" style="margin-bottom:8px">Moment ${st.iq} of 3</p><div class="card"><p class="scenario">${c.sc}</p><p class="q">Your first instinct?</p>`+c.opts.map((o,k)=>`<button class="pick${st.inst[st.iq-1]===k?" on":""}" data-inst="${k}"><span class="dot"></span><span>${o[0]}</span></button>`).join("")+`</div>`+nav(true,true,st.iq<3?"Next ›":"Next ›",st.inst[st.iq-1]!==undefined);}
+ if(s0==="passion")return C+`<h2>A moment you are proud of</h2><p class="lead">A time you made a difference to someone.</p>
+  <div class="card"><div class="fieldhead"><label for="story" style="font-weight:600">What happened?</label>${micBtn("story")}</div><textarea class="txt" id="story" rows="3" placeholder="e.g. I gave a struggling new hire a big account, and stayed close. She now leads a team.">${esc(st.story)}</textarea></div>
+  <p class="q" style="margin:18px 0 10px">Which practices does it show? Pick one or two.</p><div class="chips">${PR.map((x,n)=>{const on=st.passion.includes(n),full=!on&&st.passion.length>=2;return`<button class="chip${on?" on":""}" data-pick="${n}" data-key="passion" data-max="2" ${full?"disabled":""} style="--c:${PC[x.i].f}" aria-pressed="${on}">${x.n}</button>`}).join("")}</div>`+lock("Only you and your own leader see this.")+nav(true,true,"Next ›",st.passion.length>0&&st.story.length>0);
+ if(s0==="ask"){const n=st.team.length;return C+`<h2>Ask two people where you are at your best</h2><p class="lead">Your team and your own leader. Two minutes each.</p>
+  ${st.invited?`<div class="card"><b>Invitations sent</b><p class="meta" style="margin-top:4px">We will email you when three have replied.</p></div>`:
+  `<div class="card"><b>Your team</b> <span class="meta">· pick three or more</span><div class="chips" style="margin-top:10px">${SUGGEST.map(x=>`<button class="chip${st.team.includes(x)?" on":""}" data-team="${x}" aria-pressed="${st.team.includes(x)}">${x}</button>`).join("")}</div>
+  <label for="leader" style="display:block;font-weight:600;margin-top:16px">Your own leader</label><input class="txt" id="leader" value="${esc(st.leader)}" placeholder="Name">
+  <div style="margin-top:14px"><button class="btn" id="invite" ${n>=3?"":"disabled"}>Send invitations</button></div></div>`}
+  ${lock("Team answers are anonymous.")}<div class="banner" style="margin-top:14px"><span>⚑</span><span><b>Prototype</b>Example answers fill in your result.</span></div>`+nav(true,true,"See the result ›");}
+ if(s0==="flame"){if(!st.revealed)return C+`<div class="card suspense"><h2>Your team has answered</h2><div class="dots">${[0,1,2,3,4].map(i=>`<span style="animation-delay:${0.2+i*0.25}s"></span>`).join("")}<span class="l" style="animation-delay:1.5s"></span></div><button class="btn" id="reveal">Reveal your flame</button></div>`+nav(true,false);
+  const sig=signature(),tp=topicFor(),topT=[...PR.keys()].sort((a,b)=>st.teamAns[b]-st.teamAns[a])[0],topM=st.mgr.find(n=>n!==topT)??st.mgr[0];
+  return C+`<h2>Your flame: ${PR[sig[0]].n} and ${PR[sig[1]].n}</h2><p class="lead">Where your story, your instinct and others’ view meet.</p>
+  <div class="views"><div><b><i style="background:#C1272D"></i>Your story</b><span>“${esc(st.story)}”</span></div><div><b><i style="background:var(--ink)"></i>Your team</b><span>sees you at your best when you ${PR[topT].you}.</span></div><div><b><i style="background:#9C947C"></i>Your own leader</b><span>sees you at your best when you ${PR[topM].you}.</span></div></div>
+  <div class="card"><p class="meta">You are a natural voice for</p><p style="font-size:20px;font-weight:700">${TOPICS[tp]}</p></div>
+  <div class="card" style="margin-top:12px;text-align:center"><b>Your flame card</b><img id="cardimg" class="cardimg" alt="Your flame card"><a class="btn alt" id="carddl" download="my-flame-card.png">Save</a></div>
+  <details class="why"><summary>Why the compass points here</summary><p class="meta" style="padding-bottom:10px">Your story, your instinct, and what your team and own leader chose, added up per practice.</p></details>`
+  +lock("Only you and your own leader see this. Nothing here feeds your rating.")+`<p class="meta" style="margin-top:6px">⚑ Prototype: example answers.</p>`+nav(true,true,"Your year ›");}
+ if(s0==="journey"){const S4=[["Light it","Months 1–4",PC[0].f,1],["Fuel it","Month 5 · Master Class",PC[1].f,0],["Spread it","Months 6–12",PC[2].f,0],["Keep it burning","Months 11–12","#24221F",0]];
+  return C+`<h2>The flame is lit</h2><p class="lead">Your year, and where you are now.</p>
+  <div class="map">${S4.map(([a,b,col,here])=>`<div class="stage${here?" here":""}">${here?`<span class="here-tag">You are here</span>`:""}<div class="bar" style="background:${col}"></div><b>${a}</b><small>${b}</small></div>`).join("")}</div>
+  <div class="card" style="margin-top:14px"><b>Next</b>
+  <div class="check"><span class="box on">✓</span><span><b>The Compass</b></span></div>
+  <div class="check"><span class="box"></span><span style="flex:1"><b>Three digital sessions</b><br><a class="btn alt" id="ics" download="inspiration-digital-sessions.ics" style="margin-top:8px">Add to calendar</a></span></div>
+  <div class="check" style="border:0"><span class="box${st.real?" on":""}">${st.real?"✓":""}</span><span style="flex:1"><b>A real case for the Master Class</b><textarea class="txt" id="real" rows="2" placeholder="A live situation in your team">${esc(st.real)}</textarea><button class="btn alt" id="saveReal" style="margin-top:8px">Save</button><p class="ok" id="ok" aria-live="polite"></p></span></div></div>
+  <h3 style="font-size:18px;margin-top:22px">Your fellow inspirers <span class="meta">· example</span></h3>
+  <div class="peers">${PEERS.map(([nm,rg,pr,tp2,c])=>`<div class="peer"><span class="av" style="background:${c}">${nm.split(" ").map(x=>x[0]).join("")}</span><span><b>${nm}</b><small>${rg} · ${PR[pr].n}</small></span></div>`).join("")}</div>`
+  +fwLink()+nav(true,false);}
+ return"";}
+// ---------- render & interactions ----------
+function keep(){const g=id=>{const e=$(id);return e?e.value.trim():null};const a=g("litText");if(a!==null)st.litText=a;const b=g("story");if(b!==null)st.story=b;const c=g("leader");if(c!==null)st.leader=c;const d=g("real");if(d!==null)st.real=d}
+function setNext(ok){const nb=$("view").querySelector("[data-nav='1']");if(nb)nb.disabled=!ok}
+function goTo(k,dir){keep();const from=chapOf(stage());st.k=Math.max(0,Math.min(FLOW.length-1,k));if(stage()==="instinct")st.iq=dir<0?3:0;
+ if(stage()==="ask"&&!st.teamAns){}st.seen=Math.max(st.seen,st.k);const to=chapOf(stage());
+ if(role==="inspirer"&&to!==from&&dir>0&&!st.opened.includes(to)){st.opened.push(to);opener(to,()=>{render();window.scrollTo(0,0)})}else{render();window.scrollTo(0,0)}}
+function render(){header();steps();drawDial();const v=$("view");v.innerHTML=screen();track(stage()+(stage()==="instinct"?"-"+st.iq:""));save();
+ v.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>{if(b.disabled)return;const d=+b.dataset.nav;keep();
+  if(stage()==="instinct"&&((d>0&&st.iq<3)||(d<0&&st.iq>0))){st.iq+=d;render();window.scrollTo(0,0);return}
+  if(stage()==="ask"&&d>0){st.teamAns=DEMO_TEAM;st.mgr=DEMO_MGR}
+  goTo(st.k+d,d)});
+ document.querySelectorAll("[data-step]").forEach(b=>{const f=()=>{keep();st.k=+b.dataset.step;if(stage()==="instinct")st.iq=0;if((stage()==="flame"||stage()==="journey")&&!st.teamAns){st.teamAns=DEMO_TEAM;st.mgr=DEMO_MGR}render();window.scrollTo(0,0)};b.onclick=f;b.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}}});
+ v.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{if(b.disabled)return;keep();buzz();const key=b.dataset.key,n=+b.dataset.pick,max=+b.dataset.max,a=st[key],i=a.indexOf(n);if(i>=0)a.splice(i,1);else if(a.length<max)a.push(n);render()});
+ v.querySelectorAll("[data-inst]").forEach(b=>b.onclick=()=>{buzz();st.inst[st.iq-1]=+b.dataset.inst;render()});
+ v.querySelectorAll("[data-team]").forEach(b=>b.onclick=()=>{keep();buzz();const x=b.dataset.team,i=st.team.indexOf(x);if(i>=0)st.team.splice(i,1);else st.team.push(x);render()});
+ v.querySelectorAll("[data-fw]").forEach(b=>b.onclick=openFW);
+ v.querySelectorAll("[data-mic]").forEach(b=>b.onclick=()=>voice(b));
+ const lt=$("litText");if(lt)lt.oninput=()=>setNext(lt.value.trim().length>0||st.lit.length>0);
+ const sy=$("story");if(sy)sy.oninput=()=>setNext(sy.value.trim().length>0&&st.passion.length>0);
+ const inv=$("invite");if(inv)inv.onclick=()=>{keep();st.invited=true;buzz();render()};
+ const rv=$("reveal");if(rv)rv.onclick=()=>{st.revealed=true;buzz();render();window.scrollTo(0,0)};
+ const sr=$("saveReal");if(sr)sr.onclick=()=>{keep();render();$("ok").textContent=st.real?"Saved. You’ll work on it at the Master Class.":"Describe the situation first."};
+ const ci=$("cardimg");if(ci){const url=flameCard();ci.src=url;$("carddl").href=url}
+ const ics=$("ics");if(ics)ics.href=icsData();}
+// ---------- voice: speak instead of type ----------
+let rec=null;
+function voice(btn){const id=btn.dataset.mic,el=$(id),SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){btn.textContent="Use your keyboard’s microphone";btn.disabled=true;return}
+ if(rec){rec.stop();return}
+ try{rec=new SR();rec.lang=navigator.language||"en-GB";rec.interimResults=false;rec.continuous=true;
+  rec.onresult=e=>{let t="";for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;el.value=(el.value+" "+t).trim();el.dispatchEvent(new Event("input"))};
+  rec.onend=()=>{rec=null;btn.classList.remove("on");btn.textContent="🎙 Speak"};rec.onerror=()=>{btn.textContent="Microphone unavailable";};
+  rec.start();btn.classList.add("on");btn.textContent="● Listening, tap to stop"}catch(e){btn.textContent="Use your keyboard’s microphone";btn.disabled=true}}
+// ---------- flame card (image you can keep) ----------
+function flameCard(){const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");
+ g.fillStyle="#F7F3EC";g.fillRect(0,0,W,H);
+ const blob=(x,y,r,col,a)=>{const gr=g.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,col+Math.round(a*255).toString(16).padStart(2,"0"));gr.addColorStop(1,col+"00");g.fillStyle=gr;g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fill()};
+ blob(220,1150,420,"#C1272D",.14);blob(900,180,380,"#E8A33D",.16);
+ g.save();g.translate(120,150);g.scale(1.3,1.3);g.fillStyle="#C1272D";g.fill(new Path2D(FP));g.fillStyle="#F3D6D3";g.fill(new Path2D(FI));g.restore();
+ const sig=signature(),tp=topicFor();const F="Archivo, Arial, sans-serif";
+ g.fillStyle="#C1272D";g.font=`700 30px ${F}`;g.fillText("INSPIRATION COMPASS",290,190);
+ g.fillStyle="#24221F";g.font=`700 72px ${F}`;g.fillText(`${NAME}’s flame`,290,270);
+ const lines=(t,font,x,y,w,lh,col)=>{g.font=font;g.fillStyle=col;const ws=t.split(" ");let l="",yy=y;for(const wd of ws){const tt=(l+" "+wd).trim();if(g.measureText(tt).width>w){g.fillText(l,x,yy);l=wd;yy+=lh}else l=tt}g.fillText(l,x,yy);return yy+lh};
+ let y=430;g.fillStyle="#6F6853";g.font=`600 28px ${F}`;g.fillText("WHAT I WILL PASS ON",120,y);y+=60;
+ sig.forEach(n=>{g.fillStyle=PC[PR[n].i].f;g.beginPath();g.arc(138,y-14,14,0,Math.PI*2);g.fill();y=lines(PR[n].n,`700 46px ${F}`,170,y,800,56,"#24221F")+6});
+ y+=30;g.fillStyle="#6F6853";g.font=`600 28px ${F}`;g.fillText("MY STORY",120,y);y+=54;
+ y=lines("“"+(st.story||"…")+"”",`italic 400 36px ${F}`,120,y,840,50,"#24221F");
+ if(st.litText||st.lit.length){y+=30;g.fillStyle="#6F6853";g.font=`600 28px ${F}`;g.fillText("THE LEADER WHO INSPIRED ME",120,y);y+=52;y=lines(st.litText?"“"+st.litText+"”":PR[st.lit[0]].lit,`400 34px ${F}`,120,y,840,46,"#3A3632")}
+ y=Math.max(y+30,1090);g.fillStyle="#6F6853";g.font=`600 28px ${F}`;g.fillText("I WILL CARRY",120,y);y+=52;g.fillStyle="#24221F";g.font=`700 42px ${F}`;g.fillText(TOPICS[tp],120,y);
+ if(LOGO.complete&&LOGO.naturalWidth){g.drawImage(LOGO,120,H-112,148,35)}g.fillStyle="#6B645B";g.font=`400 26px ${F}`;g.fillText("Leadership Inspiration · Light it. Fuel it. Spread it.",290,H-84);
+ try{return c.toDataURL("image/png")}catch(e){return""}}
+// ---------- calendar ----------
+function icsData(){const ev=[["20270209","The Hilti Leadership Framework"],["20270309","Situational Leadership"],["20270413","Courageous conversations"]];
+ const body=ev.map(([d,t],i)=>`BEGIN:VEVENT\r\nUID:ic-${d}-${i}@inspiration\r\nDTSTAMP:20261101T090000Z\r\nDTSTART:${d}T080000Z\r\nDTEND:${d}T090000Z\r\nSUMMARY:Leadership Inspiration · Digital session ${i+1}: ${t}\r\nDESCRIPTION:Led by your Regional Learning Head. Example date (prototype).\r\nEND:VEVENT`).join("\r\n");
+ return"data:text/calendar;charset=utf-8,"+encodeURIComponent(`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Hilti//Inspiration Compass//EN\r\n${body}\r\nEND:VCALENDAR`)}
+// ---------- start: resume if there is a saved journey ----------
+function start(){const sv=role==="inspirer"?load():null;
+ if(sv&&sv.k>0){const o=document.createElement("div");o.className="overlay modal";o.innerHTML=`<div class="mbox" style="max-width:460px;margin-top:18vh"><div style="display:flex;gap:14px;align-items:center">${FLAME(36)}<h2 style="margin:0">Welcome back</h2></div><p class="lead" style="margin-top:10px">You were in chapter ${chapOf(FLOW[sv.k])+1} of 7: ${CHAPS[chapOf(FLOW[sv.k])].t}.</p><div class="nav" style="margin-top:8px"><button class="btn alt" id="restart">Start again</button><button class="btn" id="resume">Pick up where you left off</button></div></div>`;
+  document.body.appendChild(o);$("resume").focus();$("resume").onclick=()=>{st=Object.assign(fresh(),sv);st.anim={name:true};o.remove();render()};$("restart").onclick=()=>{try{localStorage.removeItem(KEY)}catch(e){}st=fresh();o.remove();render()};}
+ render()}
+window.addEventListener("hashchange",()=>location.reload());
+start();
+</script></body></html>
